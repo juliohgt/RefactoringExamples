@@ -7,8 +7,7 @@ var invoices = JSON.parse(readFileSync("./invoices.json", "utf8"));
 console.log(statement(invoices[0]));
 
 function statement(invoice) {
-  let totalAmount = 0;
-  let volumeCredits = 0;
+  let totalAmount = 0;  
   let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
@@ -18,6 +17,8 @@ function statement(invoice) {
     )} (${perf.audience} seats)\n`;
     totalAmount += calc.amountFor(perf);
   }
+
+  let volumeCredits = 0;
   for (let perf of invoice.performances) {
     volumeCredits += calc.volumeCreditsFor(perf);
   }
