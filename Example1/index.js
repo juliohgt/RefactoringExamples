@@ -1,38 +1,30 @@
-const { readFile, readFileSync } = require("fs");
+const { readFileSync } = require("fs");
 const calc = require("./Calc");
-const players = require("./Players");
+const { playFor } = require("./Players");
+const { Usd } = require("./Utils");
 
 var invoices = JSON.parse(readFileSync("./invoices.json", "utf8"));
 
-console.log(statement(invoices[0]));
+invoices.forEach((element) => {
+  console.log(statement(element));
+});
 
 function statement(invoice) {
-  let totalAmount = 0;  
+  return renderPlainText(invoice);
+}
+
+function renderPlainText(invoice) {
   let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
     // print line for this order
-    result += ` ${players.playFor(perf).name}: ${usd(
-      calc.amountFor(perf) / 100
-    )} (${perf.audience} seats)\n`;
-    totalAmount += calc.amountFor(perf);
+    result += ` ${playFor(perf).name}: ${Usd(calc.amountFor(perf) / 100)} (${
+      perf.audience
+    } seats)\n`;
   }
 
-  let volumeCredits = 0;
-  for (let perf of invoice.performances) {
-    volumeCredits += calc.volumeCreditsFor(perf);
-  }
-
-  result += `Amount owed is ${usd(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits\n`;
+  result += `Amount owed is ${Usd(calc.totalAmount(invoice) / 100)}\n`;
+  result += `You earned ${calc.totalVolumeCredits(invoice)} credits\n`;
 
   return result;
-}
-
-function usd(aNumber) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(aNumber);
 }
