@@ -1,9 +1,7 @@
-const players = require("./Players");
-
 module.exports = {
   amountFor(aPerformance) {
     let result = 0;
-    switch (players.playFor(aPerformance).type) {
+    switch (aPerformance.play.type) {
       case "tragedy":
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -18,7 +16,7 @@ module.exports = {
         result += 300 * aPerformance.audience;
         break;
       default:
-        throw new Error(`unknown type: ${players.playFor(aPerformance).type}`);
+        throw new Error(`unknown type: ${aPerformance.play.type}`);
     }
     return result;
   },
@@ -26,21 +24,21 @@ module.exports = {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
 
-    if ("comedy" === players.playFor(aPerformance).type)
+    if ("comedy" === aPerformance.play.type)
       result += Math.floor(aPerformance.audience / 5);
 
     return result;
   },
-  totalVolumeCredits(invoice) {
+  totalVolumeCredits(data) {
     let result = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances) {
       result += this.volumeCreditsFor(perf);
     }
     return result;
   },
-  totalAmount(invoice) {
+  totalAmount(data) {
     let result = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances) {
       result += this.amountFor(perf);
     }
     return result;
