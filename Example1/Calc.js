@@ -32,14 +32,14 @@ module.exports = {
   totalVolumeCredits(data) {
     let result = 0;
     for (let perf of data.performances) {
-      result += this.volumeCreditsFor(perf);
+      result += perf.volumeCredits;
     }
     return result;
   },
   totalAmount(data) {
     let result = 0;
     for (let perf of data.performances) {
-      result += this.amountFor(perf);
+      result += perf.amount;
     }
     return result;
   },
