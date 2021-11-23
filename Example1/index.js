@@ -11,14 +11,15 @@ function statement(invoice) {
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
 
-  for (let perf of invoice.performances) {    
-    volumeCredits += calc.volumeCreditsFor(perf);
-
+  for (let perf of invoice.performances) {
     // print line for this order
-    result += ` ${players.playFor(perf).name}: ${usd(calc.amountFor(perf) / 100)} (${
-      perf.audience
-    } seats)\n`;
+    result += ` ${players.playFor(perf).name}: ${usd(
+      calc.amountFor(perf) / 100
+    )} (${perf.audience} seats)\n`;
     totalAmount += calc.amountFor(perf);
+  }
+  for (let perf of invoice.performances) {
+    volumeCredits += calc.volumeCreditsFor(perf);
   }
 
   result += `Amount owed is ${usd(totalAmount / 100)}\n`;
@@ -27,7 +28,7 @@ function statement(invoice) {
   return result;
 }
 
-function usd(aNumber){
+function usd(aNumber) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
