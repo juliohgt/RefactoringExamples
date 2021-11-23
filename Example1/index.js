@@ -10,11 +10,13 @@ invoices.forEach((element) => {
 });
 
 function statement(invoice) {
-  return renderPlainText(invoice);
+  const statementData = {};
+  statementData.customer = invoice.customer;
+  return renderPlainText(statementData, invoice);
 }
 
-function renderPlainText(invoice) {
-  let result = `Statement for ${invoice.customer}\n`;
+function renderPlainText(data, invoice) {
+  let result = `Statement for ${data.customer}\n`;
 
   for (let perf of invoice.performances) {
     // print line for this order
